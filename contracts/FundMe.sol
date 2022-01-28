@@ -2,7 +2,7 @@
 
 // Smart contract that lets anyone deposit ETH into the contract
 // Only the owner of the contract can withdraw the ETH
-pragma solidity ^0.6.6;
+pragma solidity ^0.6.0;
 
 import "@chainlink/contracts/src/v0.6/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
@@ -60,6 +60,14 @@ contract FundMe {
         uint256 ethAmountInUsd = (ethPrice * ethAmount) / 1000000000000000000;
         // the actual ETH/USD conversation rate, after adjusting the extra 0s.
         return ethAmountInUsd;
+    }
+
+    function getEntranceFee() public view returns (uint256) {
+        //minimumUSD
+        uint256 minimumUSD = 50 * 10**18;
+        uint256 price = getPrice();
+        uint256 precision = 1 * 10**18;
+        return (minimumUSD * precision) / price;
     }
 
     //modifier: https://medium.com/coinmonks/solidity-tutorial-all-about-modifiers-a86cf81c14cb
